@@ -1,0 +1,5 @@
+RewriteEngine On
+RewriteBase /
+
+# Redirecionar /api/produtos.php para /modules/api/produtos.php
+RewriteRule ^api/produtos\.php$ modules/api/produtos.php [L,QSA]

@@ -1,5 +1,5 @@
 <template>
-  <div class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300 bg-red-500">
+  <div class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300">
     <div class="p-6">
       <h2 class="text-xl font-semibold text-gray-800 mb-2">{{ product.nome }}</h2>
       <p class="text-gray-600 mb-4">{{ product.descricao }}</p>

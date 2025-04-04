@@ -1,7 +1,7 @@
 <template>
   <div class="min-h-screen bg-gray-100 py-8">
     <div class="container mx-auto px-4">
-      <h1 class="text-3xl font-bold text-center mb-8">Lista de Produtos</h1>
+      <h1 class="text-3xl font-bold text-center mb-8">Lista de Produtos (EMPS6)</h1>
       
       <div class="max-w-md mx-auto mb-8">
         <input
@@ -60,12 +60,26 @@ export default {
       try {
         loading.value = true
         error.value = null
-        const response = await axios.get(`/api/produtos${search ? `?search=${search}` : ''}`)
         
-        if (response.data && response.data.data) {
+        let apiUrl = 'http://localhost:8080/api/produtos.php'
+        if (search) {
+          apiUrl += `?search=${encodeURIComponent(search)}`
+        }
+        
+        const response = await axios.get(apiUrl, {
+          headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json'
+          }
+        })
+        
+        if (Array.isArray(response.data)) {
+          products.value = response.data
+        } else if (response.data && response.data.data && Array.isArray(response.data.data)) {
           products.value = response.data.data
         } else {
-          products.value = response.data
+          products.value = []
+          console.error('Unexpected response format:', response.data)
         }
       } catch (err) {
         console.error('Erro ao carregar produtos:', err)
@@ -75,7 +89,11 @@ export default {
             error.value += ` - ${err.response.data.message}`
           }
         } else if (err.request) {
-          error.value = 'Não foi possível conectar ao servidor. Verifique se o servidor EMPS6 está rodando.'
+          if (err.message.includes('Network Error') || err.message.includes('CORS')) {
+            error.value = 'Erro de CORS: O servidor não está permitindo requisições do frontend. Verifique se o servidor EMPS6 está rodando e se os headers CORS estão configurados corretamente.'
+          } else {
+            error.value = 'Não foi possível conectar ao servidor. Verifique se o servidor está rodando.'
+          }
         } else {
           error.value = 'Erro ao configurar a requisição: ' + err.message
         }
