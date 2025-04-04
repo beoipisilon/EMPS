@@ -62,6 +62,61 @@ O arquivo `local.php` contém todas as configurações necessárias para o funci
    npm run dev
    ```
 
+## Deploy
+
+### Frontend (Vercel)
+
+1. Instale a CLI da Vercel:
+   ```bash
+   npm i -g vercel
+   ```
+
+2. Configure as variáveis de ambiente no arquivo `.env`:
+   ```
+   VITE_API_URL=https://seu-backend.com/api
+   ```
+
+3. Faça deploy do frontend:
+   ```bash
+   cd frontend
+   vercel
+   ```
+
+### Backend (PHP)
+
+O backend PHP pode ser deployado em várias plataformas:
+
+#### Heroku
+1. Crie um arquivo `Procfile`:
+   ```
+   web: vendor/bin/heroku-php-apache2 htdocs/
+   ```
+
+2. Deploy:
+   ```bash
+   heroku create
+   git push heroku main
+   ```
+
+#### Railway
+1. Crie um arquivo `railway.toml`:
+   ```toml
+   [build]
+   builder = "nixpacks"
+   buildCommand = "composer install"
+
+   [deploy]
+   startCommand = "php -S 0.0.0.0:$PORT -t htdocs/"
+   ```
+
+2. Deploy usando a CLI do Railway ou GitHub integration
+
+#### Servidor Tradicional
+1. Configure um servidor web (Apache/Nginx)
+2. Configure o PHP e as extensões necessárias
+3. Faça upload dos arquivos para o servidor
+4. Configure o domínio e SSL
+
 ## Pontos Finais da API
 
 ### GET /api/produtos.php
