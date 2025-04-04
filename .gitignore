@@ -11,9 +11,6 @@ lerna-debug.log*
 node_modules/
 vendor/
 
-# EMPS6 Framework
-emps6/
-
 # Environment files
 .env
 .env.local
