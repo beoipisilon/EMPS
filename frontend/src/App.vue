@@ -13,6 +13,12 @@
         />
       </div>
 
+      <SortControls
+        :initial-sort-by="sortBy"
+        :initial-sort-order="sortOrder"
+        @sort-change="handleSortChange"
+      />
+
       <div v-if="loading" class="text-center">
         <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500 mx-auto"></div>
         <p class="mt-2 text-gray-600">Carregando produtos...</p>
@@ -29,11 +35,19 @@
         Nenhum produto encontrado.
       </div>
 
-      <div v-else class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        <ProductCard
-          v-for="product in products"
-          :key="product.id"
-          :product="product"
+      <div v-else>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <ProductCard
+            v-for="product in products"
+            :key="product.id"
+            :product="product"
+          />
+        </div>
+
+        <Pagination
+          v-if="pagination"
+          :pagination="pagination"
+          @page-change="handlePageChange"
         />
       </div>
     </div>
@@ -44,41 +58,52 @@
 import { ref, onMounted } from 'vue'
 import axios from 'axios'
 import ProductCard from './components/ProductCard.vue'
+import Pagination from './components/Pagination.vue'
+import SortControls from './components/SortControls.vue'
 
 export default {
   name: 'App',
   components: {
-    ProductCard
+    ProductCard,
+    Pagination,
+    SortControls
   },
   setup() {
     const products = ref([])
     const loading = ref(true)
     const error = ref(null)
     const searchTerm = ref('')
+    const currentPage = ref(1)
+    const sortBy = ref('preco')
+    const sortOrder = ref('asc')
+    const pagination = ref(null)
 
-    const fetchProducts = async (search = '') => {
+    const fetchProducts = async (search = '', page = 1) => {
       try {
         loading.value = true
         error.value = null
         
-        let apiUrl = 'http://localhost:8080/api/produtos.php'
-        if (search) {
-          apiUrl += `?search=${encodeURIComponent(search)}`
-        }
+        const params = new URLSearchParams({
+          search: search,
+          page: page,
+          per_page: 6,
+          sort_by: sortBy.value,
+          sort_order: sortOrder.value
+        })
         
-        const response = await axios.get(apiUrl, {
+        const response = await axios.get(`http://localhost:8080/api/produtos.php?${params.toString()}`, {
           headers: {
             'Content-Type': 'application/json',
             'Accept': 'application/json'
           }
         })
         
-        if (Array.isArray(response.data)) {
-          products.value = response.data
-        } else if (response.data && response.data.data && Array.isArray(response.data.data)) {
+        if (response.data && response.data.data) {
           products.value = response.data.data
+          pagination.value = response.data.pagination
         } else {
           products.value = []
+          pagination.value = null
           console.error('Unexpected response format:', response.data)
         }
       } catch (err) {
@@ -103,7 +128,20 @@ export default {
     }
 
     const handleSearch = () => {
-      fetchProducts(searchTerm.value)
+      currentPage.value = 1
+      fetchProducts(searchTerm.value, currentPage.value)
+    }
+
+    const handlePageChange = (page) => {
+      currentPage.value = page
+      fetchProducts(searchTerm.value, page)
+    }
+
+    const handleSortChange = ({ sortBy: newSortBy, sortOrder: newSortOrder }) => {
+      sortBy.value = newSortBy
+      sortOrder.value = newSortOrder
+      currentPage.value = 1
+      fetchProducts(searchTerm.value, currentPage.value)
     }
 
     onMounted(() => {
@@ -115,7 +153,12 @@ export default {
       loading,
       error,
       searchTerm,
+      pagination,
+      sortBy,
+      sortOrder,
       handleSearch,
+      handlePageChange,
+      handleSortChange,
       fetchProducts
     }
   }

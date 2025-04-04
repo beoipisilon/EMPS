@@ -28,5 +28,65 @@
         "nome": "Relógio Digital",
         "descricao": "Relógio com cronômetro e alarme",
         "preco": 149.90
+    },
+    {
+        "id": 6,
+        "nome": "Fone de Ouvido",
+        "descricao": "Fone de ouvido com cancelamento de ruído",
+        "preco": 99.90
+    },
+    {
+        "id": 7,
+        "nome": "Cadeira Gamer",
+        "descricao": "Cadeira gamer com ajuste de altura",
+        "preco": 299.90
+    },
+    {
+        "id": 8,
+        "nome": "Tablet",
+        "descricao": "Tablet com tela de 10 polegadas",
+        "preco": 399.90
+    },
+    {
+        "id": 9,
+        "nome": "Cafeteira Elétrica",
+        "descricao": "Cafeteira elétrica com filtro",
+        "preco": 49.90
+    },
+    {
+        "id": 10,
+        "nome": "Cama Box",
+        "descricao": "Cama box com estrutura de madeira",
+        "preco": 249.90
+    },
+
+    {
+        "id": 11,
+        "nome": "Cama Box",
+        "descricao": "Cama box com estrutura de madeira",
+        "preco": 249.90
+    },
+
+    {
+        "id": 12,
+        "nome": "Cama Box",
+        "descricao": "Cama box com estrutura de madeira",
+        "preco": 249.90
+    },
+
+    {
+        "id": 13,
+        "nome": "Cama Box",
+        "descricao": "Cama box com estrutura de madeira",
+        "preco": 249.90
+    },
+
+    {
+        "id": 14,
+        "nome": "Cama Box",
+        "descricao": "Cama box com estrutura de madeira",
+        "preco": 249.90
     }
+    
+
 ] 
