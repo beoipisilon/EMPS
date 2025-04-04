@@ -7,6 +7,29 @@ yarn-error.log*
 pnpm-debug.log*
 lerna-debug.log*
 
+# Dependencies
+node_modules/
+vendor/
+
+# EMPS6 Framework
+emps6/
+
+# Environment files
+.env
+.env.local
+
+# Build files
+dist/
+build/
+
+# IDE files
+.vscode/
+.idea/
+
+# OS files
+.DS_Store
+Thumbs.db
+
 node_modules
 frontend/node_modules
 frontend/dist

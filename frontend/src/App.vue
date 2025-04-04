@@ -53,7 +53,7 @@ export default {
       try {
         loading.value = true
         error.value = null
-        const response = await axios.get(`/api/produtos.php${search ? `?search=${search}` : ''}`)
+        const response = await axios.get(`/api/produtos${search ? `?search=${search}` : ''}`)
         products.value = response.data
       } catch (err) {
         error.value = 'Erro ao carregar produtos. Por favor, tente novamente.'
