@@ -20,6 +20,13 @@
 
       <div v-else-if="error" class="text-center text-red-500">
         {{ error }}
+        <button @click="fetchProducts" class="mt-4 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">
+          Tentar novamente
+        </button>
+      </div>
+
+      <div v-else-if="products.length === 0" class="text-center text-gray-500">
+        Nenhum produto encontrado.
       </div>
 
       <div v-else class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -54,10 +61,24 @@ export default {
         loading.value = true
         error.value = null
         const response = await axios.get(`/api/produtos${search ? `?search=${search}` : ''}`)
-        products.value = response.data
+        
+        if (response.data && response.data.data) {
+          products.value = response.data.data
+        } else {
+          products.value = response.data
+        }
       } catch (err) {
-        error.value = 'Erro ao carregar produtos. Por favor, tente novamente.'
-        console.error(err)
+        console.error('Erro ao carregar produtos:', err)
+        if (err.response) {
+          error.value = `Erro ao carregar produtos: ${err.response.status} ${err.response.statusText}`
+          if (err.response.data && err.response.data.message) {
+            error.value += ` - ${err.response.data.message}`
+          }
+        } else if (err.request) {
+          error.value = 'Não foi possível conectar ao servidor. Verifique se o servidor EMPS6 está rodando.'
+        } else {
+          error.value = 'Erro ao configurar a requisição: ' + err.message
+        }
       } finally {
         loading.value = false
       }
@@ -76,7 +97,8 @@ export default {
       loading,
       error,
       searchTerm,
-      handleSearch
+      handleSearch,
+      fetchProducts
     }
   }
 }
