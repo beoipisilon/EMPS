@@ -7,11 +7,21 @@ Este projeto implementa uma aplicação de listagem de produtos usando Vue.js pa
 ```
 .
 ├── frontend/           # Aplicação frontend Vue.js
+│   ├── src/           # Código fonte Vue.js
+│   │   ├── components/ # Componentes Vue
+│   │   │   ├── ProductCard.vue  # Card de produto
+│   │   │   ├── Pagination.vue   # Componente de paginação
+│   │   │   └── SortControls.vue # Controles de ordenação
+│   │   └── App.vue    # Componente principal
 ├── backend/           # Backend PHP com EMPS6
-│   ├── modules/       # Módulos da aplicação
-│   │   └── api/      # Pontos finais da API
-│   │       └── produtos.php # API de produtos
-│   └── router.php    # Roteador da aplicação
+│   ├── api/           # Pontos finais da API
+│   │   └── produtos.php # API de produtos
+│   ├── controllers/   # Controladores
+│   │   └── ProductController.php # Controlador de produtos
+│   ├── repositories/  # Repositórios
+│   │   └── ProductRepository.php # Repositório de produtos
+│   └── data/          # Dados da aplicação
+│       └── products.json # Dados dos produtos
 └── emps/             # Framework EMPS6
     ├── htdocs/       # Raiz da web
     │   ├── .htaccess # Configurações de redirecionamento
@@ -22,6 +32,8 @@ Este projeto implementa uma aplicação de listagem de produtos usando Vue.js pa
 ## Funcionalidades
 
 - Listagem de produtos com funcionalidade de pesquisa
+- Paginação de resultados com navegação intuitiva
+- Ordenação por preço e nome (crescente/decrescente)
 - Design responsivo com Tailwind CSS
 - Suporte CORS para solicitações de origem cruzada
 - Integração do framework EMPS6
@@ -121,22 +133,34 @@ O backend PHP pode ser deployado em várias plataformas:
 
 ### GET /api/produtos.php
 
-Retorna uma lista de produtos.
+Retorna uma lista de produtos com paginação e ordenação.
 
 **Parâmetros de Consulta:**
 - `search` (opcional): Filtra os produtos pelo nome
+- `page` (opcional, padrão: 1): Número da página atual
+- `per_page` (opcional, padrão: 6): Itens por página
+- `sort_by` (opcional, padrão: "preco"): Campo para ordenação ("preco" ou "nome")
+- `sort_order` (opcional, padrão: "asc"): Ordem de classificação ("asc" ou "desc")
 
 **Exemplo de Resposta:**
 ```json
-[
-  {
-    "id": 1,
-    "nome": "Camiseta Branca",
-    "descricao": "100% algodão, unissex",
-    "preco": 59.90
-  },
-  ...
-]
+{
+  "data": [
+    {
+      "id": 1,
+      "nome": "Camiseta Branca",
+      "descricao": "100% algodão, unissex",
+      "preco": 59.90
+    },
+    ...
+  ],
+  "pagination": {
+    "total": 24,
+    "per_page": 6,
+    "current_page": 1,
+    "total_pages": 4
+  }
+}
 ```
 
 ## Tecnologias Utilizadas
