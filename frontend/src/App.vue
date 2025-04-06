@@ -91,7 +91,7 @@ export default {
           sort_order: sortOrder.value
         })
         
-        const response = await axios.get(`http://163.5.124.28/backend/produtos.php?${params.toString()}`, {
+        const response = await axios.get(`https://163.5.124.28/backend/api/produtos.php?${params.toString()}`, {
           headers: {
             'Content-Type': 'application/json',
             'Accept': 'application/json'
