@@ -5,11 +5,11 @@ export default defineConfig({
   plugins: [vue()],
   server: {
     proxy: {
-      '/api': {
-        target: 'http://163.5.124.28/backend/api',
+      '^/api/.*': {
+        target: 'http://163.5.124.28/backend',
         changeOrigin: true,
         secure: false,
-        rewrite: (path) => path.replace(/^\/api/, '/api')
+        rewrite: (path) => path
       }
     }
   }
